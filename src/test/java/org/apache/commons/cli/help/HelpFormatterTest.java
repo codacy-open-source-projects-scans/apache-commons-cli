@@ -29,10 +29,13 @@ import java.util.List;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
-import org.apache.commons.example.cli.XhtmlHelpAppendable;
+import org.apache.commons.cli.example.XhtmlHelpAppendable;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests {@link HelpFormatter}.
+ */
 public class HelpFormatterTest {
 
     private Options getTestGroups() {
@@ -60,7 +63,7 @@ public class HelpFormatterTest {
     public void testDefault() {
         final StringBuilder sb = new StringBuilder();
         final TextHelpAppendable serializer = new TextHelpAppendable(sb);
-        final HelpFormatter formatter = new HelpFormatter(serializer);
+        final HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).get();
         assertEquals(serializer, formatter.getSerializer(), "Unexpected helpAppendable tests may fail unexpectedly");
         assertEquals(AbstractHelpFormatter.DEFAULT_COMPARATOR, formatter.getComparator(), "Unexpected comparator tests may fail unexpectedly");
         assertEquals(AbstractHelpFormatter.DEFAULT_SYNTAX_PREFIX, formatter.getSyntaxPrefix(), "Unexpected syntax prefix tests may fail unexpectedly");
@@ -70,7 +73,7 @@ public class HelpFormatterTest {
     public void testPrintHelp() throws IOException {
         final StringBuilder sb = new StringBuilder();
         final TextHelpAppendable serializer = new TextHelpAppendable(sb);
-        HelpFormatter formatter = new HelpFormatter(serializer);
+        HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).get();
 
         final Options options = new Options().addOption(Option.builder("a").since("1853").hasArg().desc("aaaa aaaa aaaa aaaa aaaa").build());
 
@@ -89,7 +92,7 @@ public class HelpFormatterTest {
         List<String> actual = IOUtils.readLines(new StringReader(sb.toString()));
         assertEquals(expected, actual);
 
-        formatter = new HelpFormatter.Builder().setShowSince(false).setSerializer(serializer).build();
+        formatter = HelpFormatter.builder().setShowSince(false).setHelpAppendable(serializer).get();
         expected = new ArrayList<>();
         expected.add(" usage:  commandSyntax [-a <arg>]");
         expected.add("");
@@ -148,7 +151,7 @@ public class HelpFormatterTest {
     public void testPrintHelpXML() throws IOException {
         final StringBuilder sb = new StringBuilder();
         final XhtmlHelpAppendable serializer = new XhtmlHelpAppendable(sb);
-        final HelpFormatter formatter = new HelpFormatter(serializer);
+        final HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).get();
 
         final Options options = new Options().addOption("a", false, "aaaa aaaa aaaa aaaa aaaa");
 
@@ -179,7 +182,7 @@ public class HelpFormatterTest {
     public void testPrintOptions() throws IOException {
         final StringBuilder sb = new StringBuilder();
         final TextHelpAppendable serializer = new TextHelpAppendable(sb);
-        final HelpFormatter formatter = new HelpFormatter.Builder().setSerializer(serializer).setShowSince(false).build();
+        final HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).setShowSince(false).get();
 
         // help format default column styles
         // col options description helpAppendable
@@ -227,10 +230,10 @@ public class HelpFormatterTest {
 
     @Test
     public void testSetOptionFormatBuilderTest() {
-        final HelpFormatter.Builder underTest = new HelpFormatter.Builder();
-        final OptionFormatter.Builder ofBuilder = new OptionFormatter.Builder().setOptPrefix("Just Another ");
+        final HelpFormatter.Builder underTest = HelpFormatter.builder();
+        final OptionFormatter.Builder ofBuilder = OptionFormatter.builder().setOptPrefix("Just Another ");
         underTest.setOptionFormatBuilder(ofBuilder);
-        final HelpFormatter formatter = underTest.build();
+        final HelpFormatter formatter = underTest.get();
         final OptionFormatter oFormatter = formatter.getOptionFormatter(Option.builder("thing").build());
         assertEquals("Just Another thing", oFormatter.getOpt());
 
@@ -238,8 +241,8 @@ public class HelpFormatterTest {
 
     @Test
     public void testSetOptionGroupSeparatorTest() {
-        final HelpFormatter.Builder underTest = new HelpFormatter.Builder().setOptionGroupSeparator(" and ");
-        final HelpFormatter formatter = underTest.build();
+        final HelpFormatter.Builder underTest = HelpFormatter.builder().setOptionGroupSeparator(" and ");
+        final HelpFormatter formatter = underTest.get();
         final String result = formatter.toSyntaxOptions(new OptionGroup().addOption(Option.builder("this").build()).addOption(Option.builder("that").build()));
         assertTrue(result.contains("-that and -this"));
     }
@@ -248,7 +251,7 @@ public class HelpFormatterTest {
     public void testSortOptionGroupsTest() {
         final Options options = getTestGroups();
         final List<Option> optList = new ArrayList<>(options.getOptions());
-        final HelpFormatter underTest = new HelpFormatter();
+        final HelpFormatter underTest = HelpFormatter.builder().get();
         final List<Option> expected = new ArrayList<>();
         expected.add(optList.get(0)); // because 1 sorts before all long values
         expected.add(optList.get(1));
@@ -271,7 +274,7 @@ public class HelpFormatterTest {
             .addOption(Option.builder().longOpt("COpt").hasArg().desc("A COpt description").build());
         // @formatter:on
 
-        HelpFormatter underTest = new HelpFormatter();
+        HelpFormatter underTest = HelpFormatter.builder().get();
         final List<Option> expected = new ArrayList<>();
         expected.add(options.getOption("a"));
         expected.add(options.getOption("b"));
@@ -281,7 +284,7 @@ public class HelpFormatterTest {
 
         expected.set(0, expected.get(2));
         expected.set(2, options.getOption("a"));
-        underTest = new HelpFormatter.Builder().setComparator(AbstractHelpFormatter.DEFAULT_COMPARATOR.reversed()).build();
+        underTest = HelpFormatter.builder().setComparator(AbstractHelpFormatter.DEFAULT_COMPARATOR.reversed()).get();
         assertEquals(expected, underTest.sort(options));
 
         assertEquals(0, underTest.sort(Collections.emptyList()).size(), "empty colleciton should return empty list");
@@ -293,7 +296,7 @@ public class HelpFormatterTest {
     public void testSyntaxPrefix() {
         final StringBuilder sb = new StringBuilder();
         final TextHelpAppendable serializer = new TextHelpAppendable(sb);
-        final HelpFormatter formatter = new HelpFormatter(serializer);
+        final HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).get();
         formatter.setSyntaxPrefix("Something new");
         assertEquals("Something new", formatter.getSyntaxPrefix());
         assertEquals(0, sb.length(), "Should not write to output");
@@ -303,7 +306,7 @@ public class HelpFormatterTest {
     public void testToArgNameTest() {
         final StringBuilder sb = new StringBuilder();
         final TextHelpAppendable serializer = new TextHelpAppendable(sb);
-        final HelpFormatter formatter = new HelpFormatter(serializer);
+        final HelpFormatter formatter = HelpFormatter.builder().setHelpAppendable(serializer).get();
 
         assertEquals("<some Arg>", formatter.toArgName("some Arg"));
         assertEquals("<>", formatter.toArgName(""));
@@ -312,7 +315,7 @@ public class HelpFormatterTest {
 
     @Test
     public void testToSyntaxOptionGroupTest() {
-        final HelpFormatter underTest = new HelpFormatter();
+        final HelpFormatter underTest = HelpFormatter.builder().get();
         // @formatter:off
         final OptionGroup group = new OptionGroup()
             .addOption(Option.builder().option("o").longOpt("one").hasArg().build())
@@ -333,7 +336,7 @@ public class HelpFormatterTest {
 
     @Test
     public void testToSyntaxOptionIterableTest() {
-        final HelpFormatter underTest = new HelpFormatter();
+        final HelpFormatter underTest = HelpFormatter.builder().get();
         final List<Option> options = new ArrayList<>();
 
         options.add(Option.builder().option("o").longOpt("one").hasArg().build());
@@ -349,7 +352,7 @@ public class HelpFormatterTest {
 
     @Test
     public void testToSyntaxOptionOptionsTest() {
-        final HelpFormatter underTest = new HelpFormatter();
+        final HelpFormatter underTest = HelpFormatter.builder().get();
         Options options = getTestGroups();
         assertEquals("[-1 <arg> | --aon <arg> | --uno <arg>] [--dos <arg> | --dó <arg> | --two <arg>] " + "[--three <arg> | --tres <arg> | --trí <arg>]",
                 underTest.toSyntaxOptions(options), "getTestGroup options failed");

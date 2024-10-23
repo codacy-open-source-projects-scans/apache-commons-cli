@@ -16,7 +16,6 @@
  */
 package org.apache.commons.cli.help;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -35,6 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+/**
+ * Tests {@link TextHelpAppendable}.
+ */
 public final class TextHelpAppendableTest {
 
     private StringBuilder sb;
@@ -49,7 +51,7 @@ public final class TextHelpAppendableTest {
     @Test
     public void tesstMakeColumnQueue() {
         final String text = "The quick brown fox jumps over the lazy dog";
-        final TextStyle.Builder styleBuilder = new TextStyle.Builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
+        final TextStyle.Builder styleBuilder = TextStyle.builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
 
         Queue<String> expected = new LinkedList<>();
         expected.add("The quick ");
@@ -101,15 +103,15 @@ public final class TextHelpAppendableTest {
         // test width smaller than header
         // @formatter:off
         final TableDefinition tableDefinition = TableDefinition.from("Testing",
-                Collections.singletonList(new TextStyle.Builder().setMaxWidth(3).get()),
+                Collections.singletonList(TextStyle.builder().setMaxWidth(3).get()),
                 Collections.singletonList("header"),
                 // "data" shorter than "header"
                 Collections.singletonList(Collections.singletonList("data"))
         );
         // @formatter:on
         final TableDefinition actual = underTest.adjustTableFormat(tableDefinition);
-        assertEquals("header".length(), actual.columnStyle().get(0).getMaxWidth());
-        assertEquals("header".length(), actual.columnStyle().get(0).getMinWidth());
+        assertEquals("header".length(), actual.columnTextStyles().get(0).getMaxWidth());
+        assertEquals("header".length(), actual.columnTextStyles().get(0).getMinWidth());
     }
 
     @Test
@@ -173,7 +175,7 @@ public final class TextHelpAppendableTest {
         final List<String> expected = new ArrayList<>();
         final String[] entries = { "one", "two", "three" };
         for (int i = 0; i < entries.length; i++) {
-            expected.add(format("  %s. %s", i + 1, entries[i]));
+            expected.add(String.format("  %s. %s", i + 1, entries[i]));
         }
         expected.add("");
 
@@ -185,7 +187,7 @@ public final class TextHelpAppendableTest {
         sb.setLength(0);
         expected.clear();
         for (final String entry : entries) {
-            expected.add(format("  * %s", entry));
+            expected.add(String.format("  * %s", entry));
         }
         expected.add("");
         underTest.appendList(false, Arrays.asList(entries));
@@ -224,21 +226,33 @@ public final class TextHelpAppendableTest {
     }
 
     @Test
+    public void testAppendParagraphFormat() throws IOException {
+        final String[] expected = { " Hello Joe World 309", "" };
+
+        sb.setLength(0);
+        underTest.appendParagraphFormat("Hello %s World %,d", "Joe", 309);
+        final List<String> actual = IOUtils.readLines(new StringReader(sb.toString()));
+        assertEquals(Arrays.asList(expected), actual);
+
+        sb.setLength(0);
+        underTest.appendParagraphFormat("");
+        assertEquals(0, sb.length(), "empty string test failed");
+    }
+
+    @Test
     public void testAppendTable() throws IOException {
-        final TextStyle.Builder styleBuilder = new TextStyle.Builder();
+        final TextStyle.Builder styleBuilder = TextStyle.builder();
         final List<TextStyle> styles = new ArrayList<>();
         styles.add(styleBuilder.setIndent(2).get());
         styles.add(styleBuilder.setIndent(0).setLeftPad(5).setAlignment(TextStyle.Alignment.RIGHT).get());
-
         final String[] headers = { "fox", "time" };
-
         // @formatter:off
-        final List[] rows = {
+        final List<List<String>> rows = Arrays.asList(
                 Arrays.asList("The quick brown fox jumps over the lazy dog",
                         "Now is the time for all good people to come to the aid of their country"),
                 Arrays.asList("Léimeann an sionnach donn gasta thar an madra leisciúil",
-                        "Anois an t-am do na daoine maithe go léir teacht i gcabhair ar a dtír"),
-        };
+                        "Anois an t-am do na daoine maithe go léir teacht i gcabhair ar a dtír")
+        );
         // @formatter:on
 
         List<String> expected = new ArrayList<>();
@@ -251,14 +265,14 @@ public final class TextHelpAppendableTest {
         expected.add("   thar an madra leisciúil                           teacht i gcabhair ar a dtír");
         expected.add("");
 
-        TableDefinition table = TableDefinition.from("Common Phrases", styles, Arrays.asList(headers), Arrays.asList(rows));
+        TableDefinition table = TableDefinition.from("Common Phrases", styles, Arrays.asList(headers), rows);
         sb.setLength(0);
         underTest.setMaxWidth(80);
         underTest.appendTable(table);
         List<String> actual = IOUtils.readLines(new StringReader(sb.toString()));
         assertEquals(expected, actual, "full table failed");
 
-        table = TableDefinition.from(null, styles, Arrays.asList(headers), Arrays.asList(rows));
+        table = TableDefinition.from(null, styles, Arrays.asList(headers), rows);
         expected.remove(1);
         expected.remove(0);
         sb.setLength(0);
@@ -296,39 +310,39 @@ public final class TextHelpAppendableTest {
     }
 
     @Test
-    public void testFindWrapPos() {
-        final String testString = "The quick brown fox jumps over\tthe lazy dog";
-
-        assertEquals(9, TextHelpAppendable.findWrapPos(testString, 10, 0), "did not find end of word");
-        assertEquals(9, TextHelpAppendable.findWrapPos(testString, 14, 0), "did not backup to end of word");
-        assertEquals(15, TextHelpAppendable.findWrapPos(testString, 15, 0), "did not find word at 15");
-        assertEquals(15, TextHelpAppendable.findWrapPos(testString, 16, 0));
-        assertEquals(30, TextHelpAppendable.findWrapPos(testString, 15, 20), "did not find break character");
-        assertEquals(30, TextHelpAppendable.findWrapPos(testString, 150, 0), "did not handle text shorter than width");
-
-        assertThrows(IllegalArgumentException.class, () -> TextHelpAppendable.findWrapPos("", 0, 0));
-        assertEquals(3, TextHelpAppendable.findWrapPos("Hello", 4, 0));
-    }
-
-    @ParameterizedTest
-    @MethodSource("org.apache.commons.cli.help.UtilTest#charArgs")
-    public void testFindWrapPosWithWhitespace(final Character c, final boolean isWhitespace) {
-        final String text = format("Hello%cWorld", c);
-        assertEquals(isWhitespace ? 5 : 6, TextHelpAppendable.findWrapPos(text, 7, 0));
-    }
-
-    @Test
     public void testGetStyleBuilder() {
-        final TextStyle.Builder builder = underTest.getStyleBuilder();
+        final TextStyle.Builder builder = underTest.getTextStyleBuilder();
         assertEquals(TextHelpAppendable.DEFAULT_INDENT, builder.getIndent(), "Default indent value was changed, some tests may fail");
         assertEquals(TextHelpAppendable.DEFAULT_LEFT_PAD, builder.getLeftPad(), "Default left pad value was changed, some tests may fail");
         assertEquals(TextHelpAppendable.DEFAULT_WIDTH, builder.getMaxWidth(), "Default width value was changed, some tests may fail");
     }
 
     @Test
+    public void testindexOfWrapPos() {
+        final String testString = "The quick brown fox jumps over\tthe lazy dog";
+
+        assertEquals(9, TextHelpAppendable.indexOfWrap(testString, 10, 0), "did not find end of word");
+        assertEquals(9, TextHelpAppendable.indexOfWrap(testString, 14, 0), "did not backup to end of word");
+        assertEquals(15, TextHelpAppendable.indexOfWrap(testString, 15, 0), "did not find word at 15");
+        assertEquals(15, TextHelpAppendable.indexOfWrap(testString, 16, 0));
+        assertEquals(30, TextHelpAppendable.indexOfWrap(testString, 15, 20), "did not find break character");
+        assertEquals(30, TextHelpAppendable.indexOfWrap(testString, 150, 0), "did not handle text shorter than width");
+
+        assertThrows(IllegalArgumentException.class, () -> TextHelpAppendable.indexOfWrap("", 0, 0));
+        assertEquals(3, TextHelpAppendable.indexOfWrap("Hello", 4, 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("org.apache.commons.cli.help.UtilTest#charArgs")
+    public void testindexOfWrapPosWithWhitespace(final Character c, final boolean isWhitespace) {
+        final String text = String.format("Hello%cWorld", c);
+        assertEquals(isWhitespace ? 5 : 6, TextHelpAppendable.indexOfWrap(text, 7, 0));
+    }
+
+    @Test
     public void testPrintWrapped() throws IOException {
         String text = "The quick brown fox jumps over the lazy dog";
-        final TextStyle.Builder styleBuilder = new TextStyle.Builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
+        final TextStyle.Builder styleBuilder = TextStyle.builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
 
         final List<String> expected = new ArrayList<>();
         expected.add("The quick");
@@ -390,11 +404,11 @@ public final class TextHelpAppendableTest {
 
     @Test
     public void testResize() {
-        TextStyle.Builder tsBuilder = new TextStyle.Builder().setIndent(2).setMaxWidth(3);
+        TextStyle.Builder tsBuilder = TextStyle.builder().setIndent(2).setMaxWidth(3);
         underTest.resize(tsBuilder, 0.5);
         assertEquals(0, tsBuilder.getIndent());
 
-        tsBuilder = new TextStyle.Builder().setIndent(4).setMaxWidth(6);
+        tsBuilder = TextStyle.builder().setIndent(4).setMaxWidth(6);
         underTest.resize(tsBuilder, 0.5);
         assertEquals(1, tsBuilder.getIndent());
     }
@@ -403,11 +417,11 @@ public final class TextHelpAppendableTest {
     public void testResizeTableFormat() {
         underTest.setMaxWidth(150);
         final TableDefinition tableDefinition = TableDefinition.from("Caption",
-                Collections.singletonList(new TextStyle.Builder().setMinWidth(20).setMaxWidth(100).get()), Collections.singletonList("header"),
+                Collections.singletonList(TextStyle.builder().setMinWidth(20).setMaxWidth(100).get()), Collections.singletonList("header"),
                 Collections.singletonList(Collections.singletonList("one")));
         final TableDefinition result = underTest.adjustTableFormat(tableDefinition);
-        assertEquals(20, result.columnStyle().get(0).getMinWidth(), "Minimum width should not be reset");
-        assertEquals(100, result.columnStyle().get(0).getMaxWidth(), "Maximum width should not be reset");
+        assertEquals(20, result.columnTextStyles().get(0).getMinWidth(), "Minimum width should not be reset");
+        assertEquals(100, result.columnTextStyles().get(0).getMaxWidth(), "Maximum width should not be reset");
     }
 
     @Test
@@ -442,7 +456,7 @@ public final class TextHelpAppendableTest {
 
         queues.add(queue);
 
-        final TextStyle.Builder styleBuilder = new TextStyle.Builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
+        final TextStyle.Builder styleBuilder = TextStyle.builder().setMaxWidth(10).setIndent(0).setLeftPad(0);
 
         final List<TextStyle> columns = new ArrayList<>();
         columns.add(styleBuilder.get());

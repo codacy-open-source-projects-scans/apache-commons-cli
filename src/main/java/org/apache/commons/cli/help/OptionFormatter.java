@@ -19,6 +19,7 @@ package org.apache.commons.cli.help;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.commons.cli.DeprecatedAttributes;
 import org.apache.commons.cli.Option;
@@ -31,9 +32,9 @@ import org.apache.commons.cli.Option;
 public final class OptionFormatter {
 
     /**
-     * A Builder for OptionFormatters.
+     * Builds instances of {@link OptionFormatter}.
      */
-    public static final class Builder {
+    public static final class Builder implements Supplier<OptionFormatter> {
 
         /** The argument name delimiters */
         private final String[] argNameDelimiters;
@@ -47,13 +48,13 @@ public final class OptionFormatter {
         /** The long option prefix */
         private String longOptPrefix;
 
-        /** the option prefix */
+        /** The option prefix */
         private String optPrefix;
 
         /** The separator between long and short options */
         private String optSeparator;
 
-        /** the separator between the opt and/or longOpt and the argument name */
+        /** The separator between the opt and/or longOpt and the argument name */
         private String optArgSeparator;
 
         /** The delimiters surrounding optional {@link Option} instances. */
@@ -65,7 +66,7 @@ public final class OptionFormatter {
         /**
          * Default constructor. Uses the defaults specified in {@link OptionFormatter}.
          */
-        public Builder() {
+        private Builder() {
             argNameDelimiters = Arrays.copyOf(DEFAULT_ARG_NAME_DELIMITERS, 2);
             defaultArgName = DEFAULT_ARG_NAME;
             deprecatedFormatFunction = NO_DEPRECATED_FORMAT;
@@ -102,12 +103,18 @@ public final class OptionFormatter {
             return new OptionFormatter(option, this);
         }
 
+        @Override
+        public OptionFormatter get() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
         /**
          * Specifies the starting and ending argument name delimiters for {@link Option} instances.
          *
          * @param begin the beginning delimiter.
          * @param end   the ending delimiter.
-         * @return this.
+         * @return this instance.
          */
         public Builder setArgumentNameDelimiters(final String begin, final String end) {
             this.argNameDelimiters[0] = Util.defaultValue(begin, "");
@@ -130,7 +137,7 @@ public final class OptionFormatter {
          * Specifies the function to construct the deprecated massage for the Option. Should include the description text if desired.
          *
          * @param deprecatedFormatFunction the function to specify the deprecated message for the option.
-         * @return this.
+         * @return this instance.
          */
         public Builder setDeprecatedFormatFunction(final Function<Option, String> deprecatedFormatFunction) {
             this.deprecatedFormatFunction = deprecatedFormatFunction;
@@ -165,7 +172,7 @@ public final class OptionFormatter {
          *
          * @param begin the beginning delimiter.
          * @param end   the ending delimiter.
-         * @return this.
+         * @return this instance.
          */
         public Builder setOptionalDelimiters(final String begin, final String end) {
             this.optionalDelimiters[0] = Util.defaultValue(begin, "");
@@ -177,7 +184,7 @@ public final class OptionFormatter {
          * Specifies the short option prefix.
          *
          * @param optPrefix the prefix for short options.
-         * @return this.
+         * @return this instance.
          */
         public Builder setOptPrefix(final String optPrefix) {
             this.optPrefix = Util.defaultValue(optPrefix, "");
@@ -224,7 +231,9 @@ public final class OptionFormatter {
     /** The default delimiters for an argument name */
     private static final String[] DEFAULT_ARG_NAME_DELIMITERS = { "<", ">" };
 
-    /** The default argument name */
+    /**
+     * The default argument name: {@value}.
+     */
     public static final String DEFAULT_ARG_NAME = "arg";
 
     /**
@@ -260,29 +269,38 @@ public final class OptionFormatter {
     public static final Function<Option, String> NO_DEPRECATED_FORMAT = o -> Util.defaultValue(o.getDescription(), "");
 
     /**
-     * The string to display at the beginning of the usage statement.
+     * The string to display at the beginning of the usage statement: {@value}.
      */
     public static final String DEFAULT_SYNTAX_PREFIX = "usage: ";
 
     /**
-     * Default prefix for short options.
+     * Default prefix for short options: {@value}.
      */
     public static final String DEFAULT_OPT_PREFIX = "-";
 
     /**
-     * Default prefix for long options.
+     * Default prefix for long options: {@value}.
      */
     public static final String DEFAULT_LONG_OPT_PREFIX = "--";
 
     /**
-     * The default separator between options.
+     * The default separator between options: {@value}.
      */
     public static final String DEFAULT_OPT_SEPARATOR = ", ";
 
     /**
-     * The default separator between the opt and/or longOpt and the argument name.
+     * The default separator between the opt and/or longOpt and the argument name: {@value}.
      */
     public static final String DEFAULT_OPT_ARG_SEPARATOR = " ";
+
+    /**
+     * Creates a new builder.
+     *
+     * @return a new builder.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
 
     /**
      * Construct the {@link OptionFormatter} from an {@link Option} using the default {@link OptionFormatter.Builder}.
@@ -291,7 +309,7 @@ public final class OptionFormatter {
      * @return an OptionFormatter for the specified @{code option}.
      */
     public static OptionFormatter from(final Option option) {
-        return new OptionFormatter.Builder().build(option);
+        return new Builder().build(option);
     }
 
     /**

@@ -28,13 +28,17 @@ import java.io.IOException;
  * The class {@code FilterHelpAppendable} itself simply overrides all methods of {@code HelpAppendable} with versions that pass all requests to the underlying
  * appendable. Subclasses of {@code FilterHelpAppendable} may further override some of these methods as well as provide additional methods and fields.
  * </p>
+ * <p>
+ * <em>Implementation Note</em>: This class is similar to FilterOutputStream in relation to OutputStream. We could further split FilterHelpAppendable into a
+ * FilterAppendable but that seems like YAGNI.
+ * </p>
  *
  * @since 1.10.0
  */
 public abstract class FilterHelpAppendable implements HelpAppendable {
 
     /**
-     * The Appendable instance to write to.
+     * The underlying appendable to be filtered.
      */
     protected final Appendable output;
 
@@ -49,19 +53,19 @@ public abstract class FilterHelpAppendable implements HelpAppendable {
     }
 
     @Override
-    public Appendable append(final char ch) throws IOException {
+    public FilterHelpAppendable append(final char ch) throws IOException {
         output.append(ch);
         return this;
     }
 
     @Override
-    public Appendable append(final CharSequence text) throws IOException {
+    public FilterHelpAppendable append(final CharSequence text) throws IOException {
         output.append(text);
         return this;
     }
 
     @Override
-    public Appendable append(final CharSequence csq, final int start, final int end) throws IOException {
+    public FilterHelpAppendable append(final CharSequence csq, final int start, final int end) throws IOException {
         output.append(csq, start, end);
         return this;
     }
