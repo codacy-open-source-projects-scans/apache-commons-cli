@@ -31,7 +31,7 @@ import java.util.Objects;
  * An Option is not created independently, but is created through an instance of {@link Options}. An Option is required to have at least a short or a long-name.
  * </p>
  * <p>
- * <b>Note:</b> once an {@link Option} has been added to an instance of {@link Options}, its required flag cannot be changed.
+ * <strong>Note:</strong> once an {@link Option} has been added to an instance of {@link Options}, its required flag cannot be changed.
  * </p>
  *
  * @see org.apache.commons.cli.Options
@@ -317,7 +317,7 @@ public class Option implements Cloneable, Serializable {
         /**
          * The Option will use {@code sep} as a means to separate argument values.
          * <p>
-         * <b>Example:</b>
+         * <strong>Example:</strong>
          * </p>
          *
          * <pre>
@@ -445,7 +445,6 @@ public class Option implements Cloneable, Serializable {
      * @param option      short representation of the option.
      * @param hasArg      specifies whether the Option takes an argument or not.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final boolean hasArg, final String description) throws IllegalArgumentException {
@@ -457,7 +456,6 @@ public class Option implements Cloneable, Serializable {
      *
      * @param option      short representation of the option.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final String description) throws IllegalArgumentException {
@@ -471,7 +469,6 @@ public class Option implements Cloneable, Serializable {
      * @param longOption  the long representation of the option.
      * @param hasArg      specifies whether the Option takes an argument or not.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final String longOption, final boolean hasArg, final String description) throws IllegalArgumentException {
@@ -691,9 +688,7 @@ public class Option implements Cloneable, Serializable {
      * Gets the specified value of this Option or {@code null} if there is no value.
      *
      * @param index The index of the value to be returned.
-     *
      * @return the specified value of this Option or {@code null} if there is no value.
-     *
      * @throws IndexOutOfBoundsException if index is less than 1 or greater than the number of the values for this Option.
      */
     public String getValue(final int index) throws IndexOutOfBoundsException {
@@ -704,7 +699,6 @@ public class Option implements Cloneable, Serializable {
      * Gets the value/first value of this Option or the {@code defaultValue} if there is no value.
      *
      * @param defaultValue The value to be returned if there is no value.
-     *
      * @return the value/first value of this Option or the {@code defaultValue} if there are no values.
      */
     public String getValue(final String defaultValue) {
@@ -713,9 +707,9 @@ public class Option implements Cloneable, Serializable {
     }
 
     /**
-     * Gets the values of this Option as a String array or null if there are no values.
+     * Gets the values of this Option as a String array or an empty array if there are no values.
      *
-     * @return the values of this Option as a String array or null if there are no values.
+     * @return the values of this Option as a String array or an empty array if there are no values.
      */
     public String[] getValues() {
         return hasNoValues() ? null : values.toArray(EMPTY_STRING_ARRAY);
@@ -731,9 +725,9 @@ public class Option implements Cloneable, Serializable {
     }
 
     /**
-     * Gets the values of this Option as a List or null if there are no values.
+     * Gets the values of this Option as a List.  Will return an empty list if there are no values.
      *
-     * @return the values of this Option as a List or null if there are no values.
+     * @return the values of this Option as a List or an empty List if there are no values.
      */
     public List<String> getValuesList() {
         return values;
@@ -955,7 +949,7 @@ public class Option implements Cloneable, Serializable {
     /**
      * Sets the type of this Option.
      * <p>
-     * <b>Note:</b> this method is kept for binary compatibility and the input type is supposed to be a {@link Class} object.
+     * <strong>Note:</strong> this method is kept for binary compatibility and the input type is supposed to be a {@link Class} object.
      * </p>
      *
      * @param type the type of this Option.
