@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -78,7 +78,7 @@ public class TextHelpAppendable extends FilterHelpAppendable {
         }
         // handle case of width > text.
         // the line ends before the max wrap pos or a new line char found
-        final int limit = Math.min(startPos + width, text.length() - 1);
+        int limit = Math.min(startPos + width, text.length());
         for (int idx = startPos; idx < limit; idx++) {
             if (BREAK_CHAR_SET.contains(text.charAt(idx))) {
                 return idx;
@@ -87,6 +87,8 @@ public class TextHelpAppendable extends FilterHelpAppendable {
         if (startPos + width >= text.length()) {
             return text.length();
         }
+
+        limit = Math.min(startPos + width, text.length() - 1);
         int pos;
         // look for the last whitespace character before limit
         for (pos = limit; pos >= startPos; --pos) {
@@ -311,15 +313,15 @@ public class TextHelpAppendable extends FilterHelpAppendable {
         final String indent = Util.repeatSpace(style.getIndent());
         final Queue<String> result = new LinkedList<>();
         int wrapPos = 0;
-        int nextPos;
+        int lastPos;
         final int wrappedMaxWidth = style.getMaxWidth() - indent.length();
         while (wrapPos < columnData.length()) {
             final int workingWidth = wrapPos == 0 ? style.getMaxWidth() : wrappedMaxWidth;
-            nextPos = indexOfWrap(columnData, workingWidth, wrapPos);
-            final CharSequence working = columnData.subSequence(wrapPos, nextPos);
+            lastPos = indexOfWrap(columnData, workingWidth, wrapPos);
+            final CharSequence working = columnData.subSequence(wrapPos, lastPos);
             result.add(lpad + style.pad(wrapPos > 0, working));
-            wrapPos = Util.indexOfNonWhitespace(columnData, nextPos);
-            wrapPos = wrapPos == -1 ? nextPos : wrapPos;
+            wrapPos = Util.indexOfNonWhitespace(columnData, lastPos);
+            wrapPos = wrapPos == -1 ? lastPos + 1 : wrapPos;
         }
         return result;
     }
@@ -388,7 +390,7 @@ public class TextHelpAppendable extends FilterHelpAppendable {
      * Resizes a TextStyle builder based on the fractional size.
      *
      * @param builder  the builder to adjust.
-     * @param fraction the fractional size (e.g. percentage of the current size) that the builder should be.
+     * @param fraction the fractional size (for example percentage of the current size) that the builder should be.
      * @return the builder with the maximum width and indent values resized.
      */
     protected TextStyle.Builder resize(final TextStyle.Builder builder, final double fraction) {

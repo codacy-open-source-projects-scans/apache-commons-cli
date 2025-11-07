@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Describes a single command-line option. It maintains information regarding the short-name of the option, the long-name, if any exists, a flag indicating if
@@ -51,7 +52,7 @@ public class Option implements Cloneable, Serializable {
      *
      * @since 1.3
      */
-    public static final class Builder {
+    public static final class Builder implements Supplier<Option> {
 
         /** The default type. */
         private static final Class<String> DEFAULT_TYPE = String.class;
@@ -116,7 +117,7 @@ public class Option implements Cloneable, Serializable {
          * Sets the display name for the argument value.
          *
          * @param argName the display name for the argument value.
-         * @return this builder, to allow method chaining.
+         * @return {@code this} instance..
          */
         public Builder argName(final String argName) {
             this.argName = argName;
@@ -128,12 +129,11 @@ public class Option implements Cloneable, Serializable {
          *
          * @return the new {@link Option}.
          * @throws IllegalArgumentException if neither {@code opt} or {@code longOpt} has been set.
+         * @deprecated Use {@link #get()}.
          */
+        @Deprecated
         public Option build() {
-            if (option == null && longOption == null) {
-                throw new IllegalArgumentException("Either opt or longOpt must be specified");
-            }
-            return new Option(this);
+            return get();
         }
 
         /**
@@ -143,7 +143,7 @@ public class Option implements Cloneable, Serializable {
          * </p>
          *
          * @param converter the Converter to use.
-         * @return this builder, to allow method chaining.
+         * @return {@code this} instance..
          * @since 1.7.0
          */
         public Builder converter(final Converter<?, ?> converter) {
@@ -177,7 +177,7 @@ public class Option implements Cloneable, Serializable {
          * Sets the description for this option.
          *
          * @param description the description of the option.
-         * @return this builder, to allow method chaining.
+         * @return {@code this} instance..
          */
         public Builder desc(final String description) {
             this.description = description;
@@ -185,9 +185,20 @@ public class Option implements Cloneable, Serializable {
         }
 
         /**
+         * Constructs an Option with the values declared by this {@link Builder}.
+         *
+         * @return the new {@link Option}.
+         * @throws IllegalStateException if neither {@code opt} or {@code longOpt} has been set.
+         */
+        @Override
+        public Option get() {
+            return new Option(this);
+        }
+
+        /**
          * Tests whether the Option will require an argument.
          *
-         * @return this builder, to allow method chaining.
+         * @return {@code this} instance..
          */
         public Builder hasArg() {
             return hasArg(true);
@@ -197,7 +208,7 @@ public class Option implements Cloneable, Serializable {
          * Tests whether the Option has an argument or not.
          *
          * @param hasArg specifies whether the Option takes an argument or not.
-         * @return this builder, to allow method chaining.
+         * @return {@code this} instance..
          */
         public Builder hasArg(final boolean hasArg) {
             // set to UNINITIALIZED when no arg is specified to be compatible with OptionBuilder
@@ -423,8 +434,12 @@ public class Option implements Cloneable, Serializable {
      * Private constructor used by the nested Builder class.
      *
      * @param builder builder used to create this option.
+     * @throws IllegalStateException if neither {@code opt} or {@code longOpt} has been set.
      */
     private Option(final Builder builder) {
+        if (builder.option == null && builder.longOption == null) {
+            throw new IllegalStateException("Either opt or longOpt must be specified");
+        }
         this.argName = builder.argName;
         this.description = builder.description;
         this.longOption = builder.longOption;
@@ -517,8 +532,7 @@ public class Option implements Cloneable, Serializable {
      */
     @Deprecated
     public boolean addValue(final String value) {
-        throw new UnsupportedOperationException(
-                "The addValue method is not intended for client use. Subclasses should use the processValue method instead.");
+        throw new UnsupportedOperationException("The addValue method is not intended for client use. Subclasses should use the processValue method instead.");
     }
 
     /**
@@ -664,7 +678,6 @@ public class Option implements Cloneable, Serializable {
     public String getSince() {
         return since;
     }
-
 
     /**
      * Gets the type of this Option.
@@ -829,9 +842,9 @@ public class Option implements Cloneable, Serializable {
      */
     void processValue(final String value) {
         if (argCount == UNINITIALIZED) {
-            throw new IllegalArgumentException("NO_ARGS_ALLOWED");
+            throw new IllegalStateException("NO_ARGS_ALLOWED");
         }
-        String add = value;
+        String add = Objects.requireNonNull(value, "value");
         // this Option has a separator character
         if (hasValueSeparator()) {
             // get the separator character

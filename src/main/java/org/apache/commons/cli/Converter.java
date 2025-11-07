@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -81,7 +81,7 @@ public interface Converter<T, E extends Exception> {
     /**
      * Applies the conversion function to the String argument.
      *
-     * @param string the String to convert
+     * @param string the String to convert.
      * @return the Object from the conversion.
      * @throws E on error.
      */

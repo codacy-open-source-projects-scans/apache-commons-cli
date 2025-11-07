@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,11 +35,11 @@ import org.junit.jupiter.api.Test;
 /**
  * Demonstrates inconsistencies in parsing Java property-style options.
  */
-public class BugCLI312Test {
+class BugCLI312Test {
     @Test
-    public void testNoOptionValues() {
-        final Option o1 = Option.builder("A").build();
-        final Option o2 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').build();
+    void testNoOptionValues() {
+        final Option o1 = Option.builder("A").get();
+        final Option o2 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').get();
         final Options options = new Options().addOption(o1).addOption(o2);
 
         final CommandLineParser parser = new DefaultParser();
@@ -48,8 +48,8 @@ public class BugCLI312Test {
     }
 
     @Test
-    public void testPropertyStyleOption_withGetOptionProperties() throws ParseException {
-        final Option o1 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').build();
+    void testPropertyStyleOption_withGetOptionProperties() throws ParseException {
+        final Option o1 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').get();
 
         final Options options = new Options();
         options.addOption(o1);
@@ -70,8 +70,8 @@ public class BugCLI312Test {
     }
 
     @Test
-    public void testPropertyStyleOption_withGetOptions() throws ParseException {
-        final Option o1 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').build();
+    void testPropertyStyleOption_withGetOptions() throws ParseException {
+        final Option o1 = Option.builder().option("D").longOpt("define").numberOfArgs(2).valueSeparator('=').get();
 
         final Options options = new Options();
         options.addOption(o1);

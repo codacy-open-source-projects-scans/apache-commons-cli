@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -108,7 +108,7 @@ final class OptionValidator {
      * </p><p>
      * In case {@code opt} is {@code null} no further validation is performed.
      *
-     * @param option The option string to validate, may be null
+     * @param option The option string to validate, may be null.
      * @throws IllegalArgumentException if the Option is not valid.
      */
     static String validate(final String option) throws IllegalArgumentException {
@@ -129,7 +129,7 @@ final class OptionValidator {
             for (int i = 1; i < chars.length; i++) {
                 final char ch = chars[i];
                 if (!isValidChar(ch)) {
-                    throw new IllegalArgumentException(String.format("The option '%s' contains an illegal " + "character : '%s'.", option, ch));
+                    throw new IllegalArgumentException(String.format("The option '%s' contains an illegal character : '%s'.", option, ch));
                 }
             }
         }

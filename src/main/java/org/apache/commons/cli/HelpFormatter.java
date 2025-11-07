@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -95,6 +95,13 @@ public class HelpFormatter {
 
         /** The flag to determine if the since values should be dispalyed */
         private boolean showSince;
+
+        /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
 
         @Override
         public HelpFormatter get() {
@@ -371,14 +378,14 @@ public class HelpFormatter {
      * is required. The display of the options is handled by appendOption
      *
      * @param buff the StringBuilder to append to
-     * @param group the group to append
+     * @param optionGroup the group to append
      * @see #appendOption(StringBuilder,Option,boolean)
      */
-    private void appendOptionGroup(final StringBuilder buff, final OptionGroup group) {
-        if (!group.isRequired()) {
+    private void appendOptionGroup(final StringBuilder buff, final OptionGroup optionGroup) {
+        if (!optionGroup.isRequired()) {
             buff.append("[");
         }
-        final List<Option> optList = new ArrayList<>(group.getOptions());
+        final List<Option> optList = new ArrayList<>(optionGroup.getOptions());
         if (getOptionComparator() != null) {
             Collections.sort(optList, getOptionComparator());
         }
@@ -391,7 +398,7 @@ public class HelpFormatter {
                 buff.append(" | ");
             }
         }
-        if (!group.isRequired()) {
+        if (!optionGroup.isRequired()) {
             buff.append("]");
         }
     }
@@ -492,6 +499,9 @@ public class HelpFormatter {
      * @throws IOException if an I/O error occurs.
      */
     <A extends Appendable> A appendWrappedText(final A appendable, final int width, final int nextLineTabStop, final String text) throws IOException {
+        if (width <= 0) {
+            return appendable;
+        }
         String render = text;
         int nextLineTabStopPos = nextLineTabStop;
         int pos = findWrapPos(render, width, 0);

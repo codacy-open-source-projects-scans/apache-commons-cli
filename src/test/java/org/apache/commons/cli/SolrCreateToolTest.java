@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,53 +27,53 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-public class SolrCreateToolTest {
+class SolrCreateToolTest {
 
     private List<Option> getOptions() {
         // @formatter:off
         return Arrays.asList(
-            SolrCliTest.OPTION_ZKHOST,
-            SolrCliTest.OPTION_SOLRURL,
-            SolrCliTest.OPTION_ZKHOST_DEPRECATED,
-            SolrCliTest.OPTION_SOLRURL,
-            Option.builder("c")
-                .longOpt("name")
-                .argName("NAME")
-                .hasArg()
-                .required(true)
-                .desc("Name of collection or core to create.")
-                .build(),
-            Option.builder("s")
-                .longOpt("shards")
-                .argName("#")
-                .hasArg()
-                .required(false)
-                .desc("Number of shards; default is 1.")
-                .build(),
-            Option.builder("rf")
-                .longOpt("replication-factor")
-                .argName("#")
-                .hasArg()
-                .required(false)
-                .desc("Number of copies of each document across the collection (replicas per shard); default is 1.")
-                .build(),
-            Option.builder("d")
-                .longOpt("confdir")
-                .argName("NAME")
-                .hasArg()
-                .required(false)
-                .desc("Configuration directory to copy when creating the new collection; default is "
-                        + SolrCliTest.DEFAULT_CONFIG_SET
-                        + '.')
-                .build(),
-            Option.builder("n")
-                .longOpt("confname")
-                .argName("NAME")
-                .hasArg()
-                .required(false)
-                .desc("Configuration name; default is the collection name.")
-                .build(),
-            SolrCliTest.OPTION_CREDENTIALS);
+                    SolrCliTest.OPTION_ZKHOST,
+                    SolrCliTest.OPTION_SOLRURL,
+                    SolrCliTest.OPTION_ZKHOST_DEPRECATED,
+                    SolrCliTest.OPTION_SOLRURL,
+                    Option.builder("c")
+                        .longOpt("name")
+                        .argName("NAME")
+                        .hasArg()
+                        .required(true)
+                        .desc("Name of collection or core to create.")
+                        .get(),
+                    Option.builder("s")
+                        .longOpt("shards")
+                        .argName("#")
+                        .hasArg()
+                        .required(false)
+                        .desc("Number of shards; default is 1.")
+                        .get(),
+                    Option.builder("rf")
+                        .longOpt("replication-factor")
+                        .argName("#")
+                        .hasArg()
+                        .required(false)
+                        .desc("Number of copies of each document across the collection (replicas per shard); default is 1.")
+                        .get(),
+                    Option.builder("d")
+                        .longOpt("confdir")
+                        .argName("NAME")
+                        .hasArg()
+                        .required(false)
+                        .desc("Configuration directory to copy when creating the new collection; default is "
+                                + SolrCliTest.DEFAULT_CONFIG_SET
+                                + '.')
+                        .get(),
+                        Option.builder("n")
+                        .longOpt("confname")
+                        .argName("NAME")
+                        .hasArg()
+                        .required(false)
+                        .desc("Configuration name; default is the collection name.")
+                        .get(),
+                    SolrCliTest.OPTION_CREDENTIALS);
       // @formatter:on
     }
 
@@ -91,14 +91,14 @@ public class SolrCreateToolTest {
     }
 
     @Test
-    public void testHelpFormatter() {
+    void testHelpFormatter() {
         final HelpFormatter formatter = new HelpFormatter();
         final String actual = printHelp(formatter);
         assertFalse(actual.contains("Deprecated"));
     }
 
     @Test
-    public void testHelpFormatterDeprecated() {
+    void testHelpFormatterDeprecated() {
         final HelpFormatter formatter = HelpFormatter.builder().setShowDeprecated(true).get();
         final String actual = printHelp(formatter);
         assertTrue(actual.contains("-zkHost,--zkHost <HOST>          [Deprecated] Zookeeper connection"));

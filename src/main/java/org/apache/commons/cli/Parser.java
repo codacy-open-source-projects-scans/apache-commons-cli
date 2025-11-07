@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,12 +25,13 @@ import java.util.ListIterator;
 import java.util.Properties;
 
 /**
- * {@code Parser} creates {@link CommandLine}s.
+ * Creates {@link CommandLine} instances.
  *
  * @deprecated since 1.3, the two-pass parsing with the flatten method is not enough flexible to handle complex cases
  */
 @Deprecated
 public abstract class Parser implements CommandLineParser {
+
     /** CommandLine instance */
     protected CommandLine cmd;
 
@@ -39,6 +40,13 @@ public abstract class Parser implements CommandLineParser {
 
     /** List of required options strings */
     private List requiredOptions;
+
+    /**
+     * Constructs a new instance.
+     */
+    public Parser() {
+        // empty
+    }
 
     /**
      * Throws a {@link MissingOptionException} if all of the required options are not present.
@@ -57,8 +65,8 @@ public abstract class Parser implements CommandLineParser {
      *
      * @param opts The Options to parse the arguments by.
      * @param arguments The arguments that have to be flattened.
-     * @param stopAtNonOption specifies whether to stop flattening when a non option has been encountered
-     * @return a String array of the flattened arguments
+     * @param stopAtNonOption specifies whether to stop flattening when a non option has been encountered.
+     * @return a String array of the flattened arguments.
      * @throws ParseException if there are any problems encountered while parsing the command line tokens.
      */
     protected abstract String[] flatten(Options opts, String[] arguments, boolean stopAtNonOption) throws ParseException;
@@ -84,9 +92,9 @@ public abstract class Parser implements CommandLineParser {
     /**
      * Parses the specified {@code arguments} based on the specified {@link Options}.
      *
-     * @param options the {@code Options}
-     * @param arguments the {@code arguments}
-     * @return the {@code CommandLine}
+     * @param options the {@code Options}.
+     * @param arguments the {@code arguments}.
+     * @return the {@code CommandLine}.
      * @throws ParseException if there are any problems encountered while parsing the command line tokens.
      */
     @Override
@@ -97,12 +105,12 @@ public abstract class Parser implements CommandLineParser {
     /**
      * Parses the specified {@code arguments} based on the specified {@link Options}.
      *
-     * @param options the {@code Options}
-     * @param arguments the {@code arguments}
+     * @param options the {@code Options}.
+     * @param arguments the {@code arguments}.
      * @param stopAtNonOption if {@code true} an unrecognized argument stops the parsing and the remaining arguments
      *        are added to the {@link CommandLine}s args list. If {@code false} an unrecognized argument triggers a
      *        ParseException.
-     * @return the {@code CommandLine}
+     * @return the {@code CommandLine}.
      * @throws ParseException if an error occurs when parsing the arguments.
      */
     @Override
@@ -111,12 +119,12 @@ public abstract class Parser implements CommandLineParser {
     }
 
     /**
-     * Parse the arguments according to the specified options and properties.
+     * Parses the arguments according to the specified options and properties.
      *
-     * @param options the specified Options
-     * @param arguments the command line arguments
-     * @param properties command line option name-value pairs
-     * @return the list of atomic option and value tokens
+     * @param options the specified Options.
+     * @param arguments the command line arguments.
+     * @param properties command line option name-value pairs.
+     * @return the list of atomic option and value tokens.
      * @throws ParseException if there are any problems encountered while parsing the command line tokens.
      * @since 1.1
      */
@@ -125,15 +133,15 @@ public abstract class Parser implements CommandLineParser {
     }
 
     /**
-     * Parse the arguments according to the specified options and properties.
+     * Parses the arguments according to the specified options and properties.
      *
-     * @param options the specified Options
-     * @param arguments the command line arguments
-     * @param properties command line option name-value pairs
+     * @param options the specified Options.
+     * @param arguments the command line arguments.
+     * @param properties command line option name-value pairs.
      * @param stopAtNonOption if {@code true} an unrecognized argument stops the parsing and the remaining arguments
      *        are added to the {@link CommandLine}s args list. If {@code false} an unrecognized argument triggers a
      *        ParseException.
-     * @return the list of atomic option and value tokens
+     * @return the list of atomic option and value tokens.
      * @throws ParseException if there are any problems encountered while parsing the command line tokens.
      * @since 1.1
      */
@@ -144,8 +152,8 @@ public abstract class Parser implements CommandLineParser {
             opt.clearValues();
         }
         // clear the data from the groups
-        for (final OptionGroup group : options.getOptionGroups()) {
-            group.setSelected(null);
+        for (final OptionGroup optionGroup : options.getOptionGroups()) {
+            optionGroup.setSelected(null);
         }
         // initialize members
         setOptions(options);
@@ -200,10 +208,10 @@ public abstract class Parser implements CommandLineParser {
     }
 
     /**
-     * Process the argument values for the specified Option {@code opt} using the values retrieved from the specified
+     * Processes the argument values for the specified Option {@code opt} using the values retrieved from the specified
      * iterator {@code iter}.
      *
-     * @param opt The current Option
+     * @param opt The current Option.
      * @param iter The iterator over the flattened command line Options.
      * @throws ParseException if an argument value is required and it is has not been found.
      */
@@ -230,12 +238,12 @@ public abstract class Parser implements CommandLineParser {
     }
 
     /**
-     * Process the Option specified by {@code arg} using the values retrieved from the specified iterator
+     * Processes the Option specified by {@code arg} using the values retrieved from the specified iterator
      * {@code iter}.
      *
-     * @param arg The String value representing an Option
+     * @param arg The String value representing an Option.
      * @param iter The iterator over the flattened command line arguments.
-     * @throws ParseException if {@code arg} does not represent an Option
+     * @throws ParseException if {@code arg} does not represent an Option.
      */
     protected void processOption(final String arg, final ListIterator<String> iter) throws ParseException {
         final boolean hasOption = getOptions().hasOption(arg);
@@ -272,8 +280,8 @@ public abstract class Parser implements CommandLineParser {
                 throw new UnrecognizedOptionException("Default option wasn't defined", option);
             }
             // if the option is part of a group, check if another option of the group has been selected
-            final OptionGroup group = options.getOptionGroup(opt);
-            final boolean selected = group != null && group.isSelected();
+            final OptionGroup optionGroup = options.getOptionGroup(opt);
+            final boolean selected = optionGroup != null && optionGroup.isSelected();
             if (!cmd.hasOption(option) && !selected) {
                 // get the value from the properties instance
                 final String value = properties.getProperty(option);
@@ -320,11 +328,11 @@ public abstract class Parser implements CommandLineParser {
         // if the option is in an OptionGroup make that option the selected
         // option of the group
         if (getOptions().getOptionGroup(opt) != null) {
-            final OptionGroup group = getOptions().getOptionGroup(opt);
-            if (group.isRequired()) {
-                getRequiredOptions().remove(group);
+            final OptionGroup optionGroup = getOptions().getOptionGroup(opt);
+            if (optionGroup.isRequired()) {
+                getRequiredOptions().remove(optionGroup);
             }
-            group.setSelected(opt);
+            optionGroup.setSelected(opt);
         }
     }
 

@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -199,12 +199,22 @@ public class CommandLine implements Serializable {
         }
     }
 
+    /**
+     * Gets the first element or null if values is null.
+     *
+     * @param values the array to query.
+     * @return the first element or null if values is null.
+     */
+    private String first(final String[] values) {
+        return values == null ? null : values[0];
+    }
+
     private <T> T get(final Supplier<T> supplier) {
         return supplier == null ? null : supplier.get();
     }
 
     /**
-     * Gets any left-over non-recognized options and arguments
+     * Gets any left-over non-recognized options and arguments.
      *
      * @return remaining items passed in but not parsed as a {@code List}.
      */
@@ -213,12 +223,45 @@ public class CommandLine implements Serializable {
     }
 
     /**
-     * Gets any left-over non-recognized options and arguments
+     * Gets any left-over non-recognized options and arguments.
      *
      * @return remaining items passed in but not parsed as an array.
      */
     public String[] getArgs() {
         return args.toArray(Util.EMPTY_STRING_ARRAY);
+    }
+
+    /**
+     * Gets the number of times this option appears in the command line
+     *
+     * @param optionChar the character name of the option.
+     * @return Number of times the option is present.
+     * @since 1.11.0
+     */
+    public int getOptionCount(final char optionChar) {
+        return getOptionCount(String.valueOf(optionChar));
+    }
+
+    /**
+     * Gets the number of times this option appears in the command line.
+     *
+     * @param option the option.
+     * @return Number of times the option is present.
+     * @since 1.11.0
+     */
+    public int getOptionCount(final Option option) {
+        return (int) options.stream().filter(opt -> Objects.equals(opt, option)).count();
+    }
+
+    /**
+     * Gets the number of times this option appears in the command line
+     *
+     * @param optionName the name of the option.
+     * @return Number of times the option is present.
+     * @since 1.11.0
+     */
+    public int getOptionCount(final String optionName) {
+        return getOptionCount(resolveOption(optionName));
     }
 
     /**
@@ -324,7 +367,7 @@ public class CommandLine implements Serializable {
     /**
      * Gets the argument, if any, of an option.
      *
-     * @param optionChar character name of the option
+     * @param optionChar character name of the option.
      * @param defaultValue is a supplier for the default value to be returned if the option is not specified.
      * @return Value of the argument if option is set, and has an argument, otherwise {@code defaultValue}.
      * @since 1.7.0
@@ -341,8 +384,7 @@ public class CommandLine implements Serializable {
      * @since 1.5.0
      */
     public String getOptionValue(final Option option) {
-        final String[] values = getOptionValues(option);
-        return values == null ? null : values[0];
+        return first(getOptionValues(option));
     }
 
     /**
@@ -378,8 +420,7 @@ public class CommandLine implements Serializable {
      * @since 1.9.0
      */
     public String getOptionValue(final OptionGroup optionGroup) {
-        final String[] values = getOptionValues(optionGroup);
-        return values == null ? null : values[0];
+        return first(getOptionValues(optionGroup));
     }
 
     /**
@@ -406,7 +447,6 @@ public class CommandLine implements Serializable {
         final String answer = getOptionValue(optionGroup);
         return answer != null ? answer : get(defaultValue);
     }
-
 
     /**
      * Gets the first argument, if any, of this option.
@@ -440,7 +480,6 @@ public class CommandLine implements Serializable {
     public String getOptionValue(final String optionName, final Supplier<String> defaultValue) {
         return getOptionValue(resolveOption(optionName), defaultValue);
     }
-
 
     /**
      * Gets the array of values, if any, of an option.
@@ -505,7 +544,7 @@ public class CommandLine implements Serializable {
      * @param optionChar the name of the option.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.5.0
      */
@@ -520,7 +559,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -535,7 +574,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -549,7 +588,7 @@ public class CommandLine implements Serializable {
      * @param option the option.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.5.0
      */
@@ -564,7 +603,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -591,7 +630,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -605,7 +644,7 @@ public class CommandLine implements Serializable {
      * @param optionGroup the option group.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or null if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the selected option value into the desired type
+     * @throws ParseException if there are problems turning the selected option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.9.0
      */
@@ -620,7 +659,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the selected option value into the desired type
+     * @throws ParseException if there are problems turning the selected option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.9.0
      */
@@ -638,7 +677,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if an option is not selected.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.9.0
      */
@@ -652,7 +691,7 @@ public class CommandLine implements Serializable {
      * @param optionName the name of the option.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.2
      */
@@ -667,7 +706,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -682,7 +721,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The return type for the method.
      * @return the value parsed into a particular object or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.7.0
      */
@@ -696,7 +735,7 @@ public class CommandLine implements Serializable {
      * @param optionChar the name of the option.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -711,7 +750,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -726,7 +765,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -740,7 +779,7 @@ public class CommandLine implements Serializable {
      * @param option the option.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -755,7 +794,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -764,12 +803,12 @@ public class CommandLine implements Serializable {
         if (option == null) {
             return get(defaultValue);
         }
-        Class<? extends T> clazz = (Class<? extends T>) option.getType();
-        String[] values = getOptionValues(option);
+        final Class<? extends T> clazz = (Class<? extends T>) option.getType();
+        final String[] values = getOptionValues(option);
         if (values == null) {
             return get(defaultValue);
         }
-        T[] result = (T[]) Array.newInstance(clazz, values.length);
+        final T[] result = (T[]) Array.newInstance(clazz, values.length);
         try {
             for (int i = 0; i < values.length; i++) {
                 result[i] = clazz.cast(option.getConverter().apply(values[i]));
@@ -787,7 +826,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or the defaultValue if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -801,7 +840,7 @@ public class CommandLine implements Serializable {
      * @param optionGroup the option group.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the selected option value into the desired type
+     * @throws ParseException if there are problems turning the selected option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -816,7 +855,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the selected option value into the desired type
+     * @throws ParseException if there are problems turning the selected option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -834,7 +873,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if an option is not selected.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if no option in the OptionGroup is set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -848,7 +887,7 @@ public class CommandLine implements Serializable {
      * @param optionName the name of the option.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or null if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -863,7 +902,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or defaultValues if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -878,7 +917,7 @@ public class CommandLine implements Serializable {
      * @param defaultValue the default value to return if opt is not set.
      * @param <T> The array type for the return value.
      * @return the values parsed into an array of objects or defaultValues if the option is not set.
-     * @throws ParseException if there are problems turning the option value into the desired type
+     * @throws ParseException if there are problems turning the option value into the desired type.
      * @see PatternOptionBuilder
      * @since 1.10.0
      */
@@ -977,6 +1016,7 @@ public class CommandLine implements Serializable {
      * Parses a list of values as properties.  All odd numbered values are property keys
      * and even numbered values are property values.  If there are an odd number of values
      * the last value is assumed to be a boolean with a value of "true".
+     *
      * @param props the properties to update.
      * @param values the list of values to parse.
      */
@@ -999,11 +1039,9 @@ public class CommandLine implements Serializable {
     private Option resolveOption(final String optionName) {
         final String actual = Util.stripLeadingHyphens(optionName);
         if (actual != null) {
-            for (final Option option : options) {
-                if (actual.equals(option.getOpt()) || actual.equals(option.getLongOpt())) {
-                    return option;
-                }
-            }
+            return options.stream()
+                    .filter(opt -> actual.equals(opt.getOpt()) || actual.equals(opt.getLongOpt()))
+                    .findFirst().orElse(null);
         }
         return null;
     }

@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -114,7 +114,7 @@ public final class OptionFormatter {
          *
          * @param begin the beginning delimiter.
          * @param end   the ending delimiter.
-         * @return this instance.
+         * @return {@code this} instance.
          */
         public Builder setArgumentNameDelimiters(final String begin, final String end) {
             this.argNameDelimiters[0] = Util.defaultValue(begin, "");
@@ -137,7 +137,7 @@ public final class OptionFormatter {
          * Specifies the function to construct the deprecated massage for the Option. Should include the description text if desired.
          *
          * @param deprecatedFormatFunction the function to specify the deprecated message for the option.
-         * @return this instance.
+         * @return {@code this} instance.
          */
         public Builder setDeprecatedFormatFunction(final Function<Option, String> deprecatedFormatFunction) {
             this.deprecatedFormatFunction = deprecatedFormatFunction;
@@ -159,8 +159,8 @@ public final class OptionFormatter {
          * Sets the separator displayed between a options and the argument name. Typically ' ' or '='.
          *
          * @param optArgSeparator the separator.
-         * @since 1.3
          * @return this
+         * @since 1.3
          */
         public Builder setOptArgSeparator(final String optArgSeparator) {
             this.optArgSeparator = Util.defaultValue(optArgSeparator, "");
@@ -172,7 +172,7 @@ public final class OptionFormatter {
          *
          * @param begin the beginning delimiter.
          * @param end   the ending delimiter.
-         * @return this instance.
+         * @return {@code this} instance.
          */
         public Builder setOptionalDelimiters(final String begin, final String end) {
             this.optionalDelimiters[0] = Util.defaultValue(begin, "");
@@ -184,7 +184,7 @@ public final class OptionFormatter {
          * Specifies the short option prefix.
          *
          * @param optPrefix the prefix for short options.
-         * @return this instance.
+         * @return {@code this} instance.
          */
         public Builder setOptPrefix(final String optPrefix) {
             this.optPrefix = Util.defaultValue(optPrefix, "");
@@ -195,8 +195,8 @@ public final class OptionFormatter {
          * Sets the separator displayed between a long option and short options. Typically ',' or ' '.
          *
          * @param optSeparator the separator.
-         * @since 1.3
          * @return this
+         * @since 1.3
          */
         public Builder setOptSeparator(final String optSeparator) {
             this.optSeparator = Util.defaultValue(optSeparator, "");
@@ -317,22 +317,22 @@ public final class OptionFormatter {
      */
     private final String[] argNameDelimiters;
 
-    /** The default argument name */
+    /** The default argument name. */
     private final String defaultArgName;
 
-    /** The function to display the deprecated option message */
+    /** The function to display the deprecated option message. */
     private final Function<Option, String> deprecatedFormatFunction;
 
-    /** The prefix for the long option text */
+    /** The prefix for the long option text. */
     private final String longOptPrefix;
 
-    /** The prefix for the short option text */
+    /** The prefix for the short option text. */
     private final String optPrefix;
 
-    /** The separator between the options */
+    /** The separator between the options. */
     private final String optSeparator;
 
-    /** the separator between the opt and/or longOpt and the argument name */
+    /** the separator between the opt and/or longOpt and the argument name. */
     private final String optArgSeparator;
 
     /** The delimiters for optional {@link Option}s. */
@@ -341,7 +341,7 @@ public final class OptionFormatter {
     /** The method to convert an Option formatter into a syntax notation. */
     private final BiFunction<OptionFormatter, Boolean, String> syntaxFormatFunction;
 
-    /** The {@link Option} being formatted */
+    /** The {@link Option} being formatted. */
     private final Option option;
 
     /**

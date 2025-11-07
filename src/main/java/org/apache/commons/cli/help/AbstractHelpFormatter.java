@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,7 +75,7 @@ public abstract class AbstractHelpFormatter {
         /**
          * Returns this instance cast to {@code B}.
          *
-         * @return this instance cast to {@code B}.
+         * @return {@code this} instance cast to {@code B}.
          */
         @SuppressWarnings("unchecked")
         protected B asThis() {
@@ -187,7 +187,7 @@ public abstract class AbstractHelpFormatter {
     private final HelpAppendable helpAppendable;
 
     /**
-     * The OptionFormatter.Builder used to display options within the help page
+     * The OptionFormatter.Builder used to display options within the help page.
      */
     private final OptionFormatter.Builder optionFormatBuilder;
 
@@ -202,7 +202,7 @@ public abstract class AbstractHelpFormatter {
     /**
      * Constructs the base formatter.
      *
-     * @param builder the builder
+     * @param builder the builder.
      */
     protected AbstractHelpFormatter(final Builder<?, ?> builder) {
         this.helpAppendable = Objects.requireNonNull(builder.getHelpAppendable(), "helpAppendable");
@@ -284,16 +284,33 @@ public abstract class AbstractHelpFormatter {
     protected abstract TableDefinition getTableDefinition(Iterable<Option> options);
 
     /**
-     * Prints the help for a collection of {@link Option}s with the specified command line syntax.
+     * Prints the help for {@link Options} with the specified command line syntax.
      *
-     * @param cmdLineSyntax the syntax for this application
-     * @param header        the banner to display at the beginning of the help
+     * @param cmdLineSyntax the syntax for this application.
+     * @param header        the banner to display at the beginning of the help.
      * @param options       the collection of {@link Option} objects to print.
-     * @param footer        the banner to display at the end of the help
-     * @param autoUsage     whether to print an automatically generated usage statement
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}
+     * @param footer        the banner to display at the end of the help.
+     * @param autoUsage     whether to print an automatically generated usage statement.
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
      */
     public void printHelp(final String cmdLineSyntax, final String header, final Iterable<Option> options, final String footer, final boolean autoUsage)
+            throws IOException {
+        Options optionsObject = new Options();
+        options.forEach(optionsObject::addOption);
+        printHelp(cmdLineSyntax, header, optionsObject, footer, autoUsage);
+    }
+
+    /**
+     * Prints the help for a collection of {@link Option}s with the specified command line syntax.
+     *
+     * @param cmdLineSyntax the syntax for this application.
+     * @param header        the banner to display at the beginning of the help.
+     * @param options       the collection of {@link Option} objects to print.
+     * @param footer        the banner to display at the end of the help.
+     * @param autoUsage     whether to print an automatically generated usage statement.
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
+     */
+    public void printHelp(final String cmdLineSyntax, final String header, final Options options, final String footer, final boolean autoUsage)
             throws IOException {
         if (Util.isEmpty(cmdLineSyntax)) {
             throw new IllegalArgumentException("cmdLineSyntax not provided");
@@ -306,32 +323,17 @@ public abstract class AbstractHelpFormatter {
         if (!Util.isEmpty(header)) {
             helpAppendable.appendParagraph(header);
         }
-        helpAppendable.appendTable(getTableDefinition(options));
+        helpAppendable.appendTable(getTableDefinition(options.getOptions()));
         if (!Util.isEmpty(footer)) {
             helpAppendable.appendParagraph(footer);
         }
     }
 
     /**
-     * Prints the help for {@link Options} with the specified command line syntax.
-     *
-     * @param cmdLineSyntax the syntax for this application
-     * @param header        the banner to display at the beginning of the help
-     * @param options       the {@link Options} to print
-     * @param footer        the banner to display at the end of the help
-     * @param autoUsage     whether to print an automatically generated usage statement
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}
-     */
-    public final void printHelp(final String cmdLineSyntax, final String header, final Options options, final String footer, final boolean autoUsage)
-            throws IOException {
-        printHelp(cmdLineSyntax, header, options.getOptions(), footer, autoUsage);
-    }
-
-    /**
      * Prints the option table for a collection of {@link Option} objects to the {@link HelpAppendable}.
      *
      * @param options the collection of Option objects to print in the table.
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
      */
     public final void printOptions(final Iterable<Option> options) throws IOException {
         printOptions(getTableDefinition(options));
@@ -341,7 +343,7 @@ public abstract class AbstractHelpFormatter {
      * Prints the option table for the specified {@link Options} to the {@link HelpAppendable}.
      *
      * @param options the Options to print in the table.
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
      */
     public final void printOptions(final Options options) throws IOException {
         printOptions(options.getOptions());
@@ -351,7 +353,7 @@ public abstract class AbstractHelpFormatter {
      * Prints a {@link TableDefinition} to the {@link HelpAppendable}.
      *
      * @param tableDefinition the {@link TableDefinition} to print.
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
      */
     public final void printOptions(final TableDefinition tableDefinition) throws IOException {
         helpAppendable.appendTable(tableDefinition);
@@ -392,7 +394,7 @@ public abstract class AbstractHelpFormatter {
     }
 
     /**
-     * Formats the {@code argName} as an argument a defined in the enclosed {@link OptionFormatter.Builder}
+     * Formats the {@code argName} as an argument a defined in the enclosed {@link OptionFormatter.Builder}.
      *
      * @param argName the string to format as an argument.
      * @return the {@code argName} formatted as an argument.
@@ -403,7 +405,11 @@ public abstract class AbstractHelpFormatter {
 
     /**
      * Return the string representation of the options as used in the syntax display.
-     *
+     * <p>
+     *     This is probably not the method you want.  This method does not track the presence
+     *     of option groups.  To display the option grouping use {@link #toSyntaxOptions(Options)} or
+     *     {@link #toSyntaxOptions(OptionGroup)} for individual groups.
+     * </p>
      * @param options The collection of {@link Option} instances to create the string representation for.
      * @return the string representation of the options as used in the syntax display.
      */
@@ -428,15 +434,15 @@ public abstract class AbstractHelpFormatter {
         for (final Option option : optList) {
             // get the next Option
             // check if the option is part of an OptionGroup
-            final OptionGroup group = lookup.apply(option);
+            final OptionGroup optionGroup = lookup.apply(option);
             // if the option is part of a group
-            if (group != null) {
+            if (optionGroup != null) {
                 // and if the group has not already been processed
-                if (!processedGroups.contains(group)) {
+                if (!processedGroups.contains(optionGroup)) {
                     // add the group to the processed list
-                    processedGroups.add(group);
+                    processedGroups.add(optionGroup);
                     // add the usage clause
-                    buff.append(prefix).append(toSyntaxOptions(group));
+                    buff.append(prefix).append(toSyntaxOptions(optionGroup));
                     prefix = " ";
                 }
                 // otherwise the option was displayed in the group previously so ignore it.

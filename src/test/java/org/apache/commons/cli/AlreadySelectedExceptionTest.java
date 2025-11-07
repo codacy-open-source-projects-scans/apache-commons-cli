@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,16 +26,16 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link AlreadySelectedException}.
  */
-public class AlreadySelectedExceptionTest {
+class AlreadySelectedExceptionTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertEquals("a", new AlreadySelectedException("a").getMessage());
         assertNull(new AlreadySelectedException("a").getOption());
         final Option option = new Option("a", "d");
-        final OptionGroup group = new OptionGroup();
-        assertNotNull(new AlreadySelectedException(group, option).getMessage());
-        assertEquals(option, new AlreadySelectedException(group, option).getOption());
-        assertEquals(group, new AlreadySelectedException(group, option).getOptionGroup());
+        final OptionGroup optionGroup = new OptionGroup();
+        assertNotNull(new AlreadySelectedException(optionGroup, option).getMessage());
+        assertEquals(option, new AlreadySelectedException(optionGroup, option).getOption());
+        assertEquals(optionGroup, new AlreadySelectedException(optionGroup, option).getOptionGroup());
     }
 }

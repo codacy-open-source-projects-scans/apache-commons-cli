@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,16 +28,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Test;
 
-public class BugCLI325Test {
+class BugCLI325Test {
 
     @Test
-    public void testCli325() throws ParseException {
+    void testCli325() throws ParseException {
         // @formatter:off
         final Option option = Option.builder("x")
-                .hasArgs()
-                .valueSeparator()
-                .desc("Multiple arg option with value separator.")
-                .build();
+        .hasArgs()
+        .valueSeparator()
+        .desc("Multiple arg option with value separator.").get();
         // @formatter:on
         final String[] args = {"-x", "A=a", "B=b"};
         final CommandLine cmdLine = DefaultParser.builder().get().parse(new Options().addOption(option), args);

@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,6 @@
  */
 
 package org.apache.commons.cli;
-
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +34,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class OptionsTest {
+class OptionsTest {
 
     private void assertToStrings(final Option option) {
         // Should never throw.
@@ -45,46 +44,46 @@ public class OptionsTest {
     }
 
     @Test
-    public void testAddConflictingOptions() {
+    void testAddConflictingOptions() {
         final Options options1 = new Options();
-        final OptionGroup group1 = new OptionGroup();
-        group1.addOption(Option.builder("a").build());
-        group1.addOption(Option.builder("b").build());
-        options1.addOptionGroup(group1);
-        options1.addOption(Option.builder("x").build());
-        options1.addOption(Option.builder("y").build());
+        final OptionGroup optionGroup1 = new OptionGroup();
+        optionGroup1.addOption(Option.builder("a").get());
+        optionGroup1.addOption(Option.builder("b").get());
+        options1.addOptionGroup(optionGroup1);
+        options1.addOption(Option.builder("x").get());
+        options1.addOption(Option.builder("y").get());
         final Options options2 = new Options();
-        final OptionGroup group2 = new OptionGroup();
-        group2.addOption(Option.builder("x").type(Integer.class).build());
-        group2.addOption(Option.builder("b").type(Integer.class).build());
-        options2.addOptionGroup(group2);
-        options2.addOption(Option.builder("c").build());
+        final OptionGroup optionGroup2 = new OptionGroup();
+        optionGroup2.addOption(Option.builder("x").type(Integer.class).get());
+        optionGroup2.addOption(Option.builder("b").type(Integer.class).get());
+        options2.addOptionGroup(optionGroup2);
+        options2.addOption(Option.builder("c").get());
         assertThrows(IllegalArgumentException.class, () -> options1.addOptions(options2));
     }
 
     @Test
-    public void testAddNonConflictingOptions() {
+    void testAddNonConflictingOptions() {
         final Options options1 = new Options();
-        final OptionGroup group1 = new OptionGroup();
-        group1.addOption(Option.builder("a").build());
-        group1.addOption(Option.builder("b").build());
-        options1.addOptionGroup(group1);
-        options1.addOption(Option.builder("x").build());
-        options1.addOption(Option.builder("y").build());
+        final OptionGroup optionGroup1 = new OptionGroup();
+        optionGroup1.addOption(Option.builder("a").get());
+        optionGroup1.addOption(Option.builder("b").get());
+        options1.addOptionGroup(optionGroup1);
+        options1.addOption(Option.builder("x").get());
+        options1.addOption(Option.builder("y").get());
 
         final Options options2 = new Options();
         final OptionGroup group2 = new OptionGroup();
-        group2.addOption(Option.builder("c").type(Integer.class).build());
-        group2.addOption(Option.builder("d").type(Integer.class).build());
+        group2.addOption(Option.builder("c").type(Integer.class).get());
+        group2.addOption(Option.builder("d").type(Integer.class).get());
         options2.addOptionGroup(group2);
-        options1.addOption(Option.builder("e").build());
-        options1.addOption(Option.builder("f").build());
+        options1.addOption(Option.builder("e").get());
+        options1.addOption(Option.builder("f").get());
 
         final Options underTest = new Options();
         underTest.addOptions(options1);
         underTest.addOptions(options2);
 
-        final List<OptionGroup> expected = Arrays.asList(group1, group2);
+        final List<OptionGroup> expected = Arrays.asList(optionGroup1, group2);
         assertTrue(expected.size() == underTest.getOptionGroups().size() && expected.containsAll(underTest.getOptionGroups()));
         final Set<Option> expectOpt = new HashSet<>(options1.getOptions());
         expectOpt.addAll(options2.getOptions());
@@ -93,17 +92,17 @@ public class OptionsTest {
     }
 
     @Test
-    public void testAddOptions() {
+    void testAddOptions() {
         final Options options = new Options();
 
-        final OptionGroup group1 = new OptionGroup();
-        group1.addOption(Option.builder("a").build());
-        group1.addOption(Option.builder("b").build());
+        final OptionGroup optionGroup1 = new OptionGroup();
+        optionGroup1.addOption(Option.builder("a").get());
+        optionGroup1.addOption(Option.builder("b").get());
 
-        options.addOptionGroup(group1);
+        options.addOptionGroup(optionGroup1);
 
-        options.addOption(Option.builder("X").build());
-        options.addOption(Option.builder("y").build());
+        options.addOption(Option.builder("X").get());
+        options.addOption(Option.builder("y").get());
 
         final Options underTest = new Options();
         underTest.addOptions(options);
@@ -113,29 +112,29 @@ public class OptionsTest {
     }
 
     @Test
-    public void testAddOptions2X() {
+    void testAddOptions2X() {
         final Options options = new Options();
 
-        final OptionGroup group1 = new OptionGroup();
-        group1.addOption(Option.builder("a").build());
-        group1.addOption(Option.builder("b").build());
+        final OptionGroup optionGroup1 = new OptionGroup();
+        optionGroup1.addOption(Option.builder("a").get());
+        optionGroup1.addOption(Option.builder("b").get());
 
-        options.addOptionGroup(group1);
+        options.addOptionGroup(optionGroup1);
 
-        options.addOption(Option.builder("X").build());
-        options.addOption(Option.builder("y").build());
+        options.addOption(Option.builder("X").get());
+        options.addOption(Option.builder("y").get());
 
         assertThrows(IllegalArgumentException.class, () -> options.addOptions(options));
     }
 
     @Test
-    public void testDeprecated() {
+    void testDeprecated() {
         final Options options = new Options();
-        options.addOption(Option.builder().option("a").build());
-        options.addOption(Option.builder().option("b").deprecated().build());
+        options.addOption(Option.builder().option("a").get());
+        options.addOption(Option.builder().option("b").deprecated().get());
         options.addOption(Option.builder().option("c")
-                .deprecated(DeprecatedAttributes.builder().setForRemoval(true).setSince("2.0").setDescription("Use X.").get()).build());
-        options.addOption(Option.builder().option("d").deprecated().longOpt("longD").hasArgs().build());
+        .deprecated(DeprecatedAttributes.builder().setForRemoval(true).setSince("2.0").setDescription("Use X.").get()).get());
+        options.addOption(Option.builder().option("d").deprecated().longOpt("longD").hasArgs().get());
         // toString()
         assertTrue(options.getOption("a").toString().startsWith("[ Option a"));
         assertTrue(options.getOption("b").toString().startsWith("[ Option b"));
@@ -151,7 +150,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testDuplicateLong() {
+    void testDuplicateLong() {
         final Options options = new Options();
         options.addOption("a", "--a", false, "toggle -a");
         options.addOption("a", "--a", false, "toggle -a*");
@@ -160,7 +159,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testDuplicateSimple() {
+    void testDuplicateSimple() {
         final Options options = new Options();
         options.addOption("a", false, "toggle -a");
         assertToStrings(options.getOption("a"));
@@ -170,7 +169,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testGetMatchingOpts() {
+    void testGetMatchingOpts() {
         final Options options = new Options();
         OptionBuilder.withLongOpt("version");
         options.addOption(OptionBuilder.create());
@@ -184,26 +183,26 @@ public class OptionsTest {
     }
 
     @Test
-    public void testGetOptionsGroups() {
+    void testGetOptionsGroups() {
         final Options options = new Options();
 
-        final OptionGroup group1 = new OptionGroup();
-        group1.addOption(OptionBuilder.create('a'));
-        group1.addOption(OptionBuilder.create('b'));
+        final OptionGroup optionGroup1 = new OptionGroup();
+        optionGroup1.addOption(OptionBuilder.create('a'));
+        optionGroup1.addOption(OptionBuilder.create('b'));
 
-        final OptionGroup group2 = new OptionGroup();
-        group2.addOption(OptionBuilder.create('x'));
-        group2.addOption(OptionBuilder.create('y'));
+        final OptionGroup optionGroup2 = new OptionGroup();
+        optionGroup2.addOption(OptionBuilder.create('x'));
+        optionGroup2.addOption(OptionBuilder.create('y'));
 
-        options.addOptionGroup(group1);
-        options.addOptionGroup(group2);
+        options.addOptionGroup(optionGroup1);
+        options.addOptionGroup(optionGroup2);
 
         assertNotNull(options.getOptionGroups());
         assertEquals(2, options.getOptionGroups().size());
     }
 
     @Test
-    public void testHelpOptions() {
+    void testHelpOptions() {
         OptionBuilder.withLongOpt("long-only1");
         final Option longOnly1 = OptionBuilder.create();
         OptionBuilder.withLongOpt("long-only2");
@@ -238,7 +237,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testLong() {
+    void testLong() {
         final Options options = new Options();
         options.addOption("a", "--a", false, "toggle -a");
         options.addOption("b", "--b", true, "set -b");
@@ -247,7 +246,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testMissingOptionException() throws ParseException {
+    void testMissingOptionException() throws ParseException {
         final Options options = new Options();
         OptionBuilder.isRequired();
         options.addOption(OptionBuilder.create("f"));
@@ -256,7 +255,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testMissingOptionsException() throws ParseException {
+    void testMissingOptionsException() throws ParseException {
         final Options options = new Options();
         OptionBuilder.isRequired();
         options.addOption(OptionBuilder.create("f"));
@@ -267,7 +266,22 @@ public class OptionsTest {
     }
 
     @Test
-    public void testSimple() {
+    void testRequiredOptionInGroupShouldNotBeInRequiredList() {
+        final String key = "a";
+        final Option option = new Option(key, "along", false, "Option A");
+        option.setRequired(true);
+        final Options options = new Options();
+        options.addOption(option);
+        assertTrue(options.getRequiredOptions().contains(key));
+        final OptionGroup optionGroup = new OptionGroup();
+        optionGroup.addOption(option);
+        options.addOptionGroup(optionGroup);
+        assertFalse(options.getOption(key).isRequired());
+        assertFalse(options.getRequiredOptions().contains(key), "Option in group shouldn't be in required options list.");
+    }
+
+    @Test
+    void testSimple() {
         final Options options = new Options();
         options.addOption("a", false, "toggle -a");
         options.addOption("b", true, "toggle -b");
@@ -276,7 +290,7 @@ public class OptionsTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         final Options options = new Options();
         options.addOption("f", "foo", true, "Foo");
         options.addOption("b", "bar", false, "Bar");

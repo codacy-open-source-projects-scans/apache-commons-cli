@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -89,12 +89,12 @@ public class PatternOptionBuilder {
     /** Class class */
     public static final Class<?> CLASS_VALUE = Class.class;
 
+    /** FileInputStream class */
+    public static final Class<FileInputStream> EXISTING_FILE_VALUE = FileInputStream.class;
+
     /// can we do this one??
     // is meant to check that the file exists, else it errors.
     // ie) it's for reading not writing.
-
-    /** FileInputStream class */
-    public static final Class<FileInputStream> EXISTING_FILE_VALUE = FileInputStream.class;
 
     /** File class */
     public static final Class<File> FILE_VALUE = File.class;
@@ -113,9 +113,9 @@ public class PatternOptionBuilder {
     /**
      * Retrieve the class that {@code ch} represents.
      *
-     * @param ch the specified character
-     * @return The class that {@code ch} represents
-     * @deprecated use {@link #getValueType(char)}
+     * @param ch the specified character.
+     * @return The class that {@code ch} represents.
+     * @deprecated Use {@link #getValueType(char)}.
      */
     @Deprecated // since="1.7.0"
     public static Object getValueClass(final char ch) {
@@ -191,7 +191,7 @@ public class PatternOptionBuilder {
                             .required(required)
                             .type(type)
                             .converter(converter)
-                            .build();
+                            .get();
                     // @formatter:on
                     // we have a previous one to deal with
                     options.addOption(option);
@@ -213,7 +213,7 @@ public class PatternOptionBuilder {
         }
 
         if (opt != Char.SP) {
-            final Option option = Option.builder(String.valueOf(opt)).hasArg(type != null).required(required).type(type).build();
+            final Option option = Option.builder(String.valueOf(opt)).hasArg(type != null).required(required).type(type).get();
 
             // we have a final one to deal with
             options.addOption(option);
@@ -225,5 +225,15 @@ public class PatternOptionBuilder {
     @SuppressWarnings("unchecked")
     static <T> T unsupported() {
         return (T) UNSUPPORTED;
+    }
+
+    /**
+     * Deprecated, only provides static methods.
+     *
+     * @deprecated Will be private or class will be final.
+     */
+    @Deprecated
+    public PatternOptionBuilder() {
+        // empty
     }
 }

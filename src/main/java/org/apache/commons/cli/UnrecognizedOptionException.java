@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ public class UnrecognizedOptionException extends ParseException {
     /**
      * Constructs a new {@code UnrecognizedArgumentException} with the specified detail message.
      *
-     * @param message the detail message
+     * @param message the detail message.
      */
     public UnrecognizedOptionException(final String message) {
         this(message, null);
@@ -42,8 +42,8 @@ public class UnrecognizedOptionException extends ParseException {
     /**
      * Constructs a new {@code UnrecognizedArgumentException} with the specified option and detail message.
      *
-     * @param message the detail message
-     * @param option the unrecognized option
+     * @param message the detail message.
+     * @param option the unrecognized option.
      * @since 1.2
      */
     public UnrecognizedOptionException(final String message, final String option) {
@@ -54,7 +54,7 @@ public class UnrecognizedOptionException extends ParseException {
     /**
      * Gets the unrecognized option.
      *
-     * @return the related option
+     * @return the related option.
      * @since 1.2
      */
     public String getOption() {

@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,23 +24,31 @@ import java.util.List;
  * The class GnuParser provides an implementation of the {@link Parser#flatten(Options, String[], boolean) flatten}
  * method.
  *
- * @deprecated since 1.3, use the {@link DefaultParser} instead
+ * @deprecated since 1.3, use the {@link DefaultParser} instead.
  */
 @Deprecated
 public class GnuParser extends Parser {
+
+    /**
+     * Constructs a new instance.
+     */
+    public GnuParser() {
+        // empty
+    }
+
     /**
      * This flatten method does so using the following rules:
      * <ol>
      * <li>If an {@link Option} exists for the first character of the {@code arguments} entry <strong>AND</strong> an
      * {@link Option} does not exist for the whole {@code argument} then add the first character as an option to the
-     * processed tokens list e.g. "-D" and add the rest of the entry to the also.</li>
+     * processed tokens list for example "-D" and add the rest of the entry to the also.</li>
      * <li>Otherwise just add the token to the processed tokens list.</li>
      * </ol>
      *
      * @param options The Options to parse the arguments by.
      * @param arguments The arguments that have to be flattened.
-     * @param stopAtNonOption specifies whether to stop flattening when a non option has been encountered
-     * @return a String array of the flattened arguments
+     * @param stopAtNonOption specifies whether to stop flattening when a non option has been encountered.
+     * @return a String array of the flattened arguments.
      */
     @Override
     protected String[] flatten(final Options options, final String[] arguments, final boolean stopAtNonOption) {
@@ -76,7 +84,6 @@ public class GnuParser extends Parser {
                 } else {
                     tokens.add(arg);
                 }
-
                 if (eatTheRest) {
                     for (i++; i < arguments.length; i++) { // NOPMD
                         tokens.add(arguments[i]);
@@ -84,7 +91,6 @@ public class GnuParser extends Parser {
                 }
             }
         }
-
         return tokens.toArray(Util.EMPTY_STRING_ARRAY);
     }
 }

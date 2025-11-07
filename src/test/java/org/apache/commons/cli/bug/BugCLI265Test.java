@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  * <p>
  * The issue is that a short option with an optional value will use whatever comes next as value.
  */
-public class BugCLI265Test {
+class BugCLI265Test {
 
     private DefaultParser parser;
     private Options options;
@@ -44,16 +44,16 @@ public class BugCLI265Test {
     public void setUp() {
         parser = new DefaultParser();
 
-        final Option optionT1 = Option.builder("t1").hasArg().numberOfArgs(1).optionalArg(true).argName("t1_path").build();
-        final Option optionA = Option.builder("a").hasArg(false).build();
-        final Option optionB = Option.builder("b").hasArg(false).build();
-        final Option optionLast = Option.builder("last").hasArg(false).build();
+        final Option optionT1 = Option.builder("t1").hasArg().numberOfArgs(1).optionalArg(true).argName("t1_path").get();
+        final Option optionA = Option.builder("a").hasArg(false).get();
+        final Option optionB = Option.builder("b").hasArg(false).get();
+        final Option optionLast = Option.builder("last").hasArg(false).get();
 
         options = new Options().addOption(optionT1).addOption(optionA).addOption(optionB).addOption(optionLast);
     }
 
     @Test
-    public void testShouldParseConcatenatedShortOptions() throws Exception {
+    void testShouldParseConcatenatedShortOptions() throws Exception {
         final String[] concatenatedShortOptions = {"-t1", "-ab"};
 
         final CommandLine commandLine = parser.parse(options, concatenatedShortOptions);
@@ -66,7 +66,7 @@ public class BugCLI265Test {
     }
 
     @Test
-    public void testShouldParseShortOptionWithoutValue() throws Exception {
+    void testShouldParseShortOptionWithoutValue() throws Exception {
         final String[] twoShortOptions = {"-t1", "-last"};
 
         final CommandLine commandLine = parser.parse(options, twoShortOptions);
@@ -77,7 +77,7 @@ public class BugCLI265Test {
     }
 
     @Test
-    public void testShouldParseShortOptionWithValue() throws Exception {
+    void testShouldParseShortOptionWithValue() throws Exception {
         final String[] shortOptionWithValue = {"-t1", "path/to/my/db"};
 
         final CommandLine commandLine = parser.parse(options, shortOptionWithValue);

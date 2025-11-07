@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,117 +36,109 @@ class SolrCliTest {
     public static final Option OPTION_ZKHOST_DEPRECATED =
     // @formatter:off
         Option.builder("zkHost")
-            .longOpt("zkHost")
-            .deprecated(
-                DeprecatedAttributes.builder()
-                    .setForRemoval(true)
-                    .setSince("9.6")
-                    .setDescription("Use --zk-host instead")
-                    .get())
-            .argName("HOST")
-            .hasArg()
-            .required(false)
-            .desc("Zookeeper connection string; unnecessary if ZK_HOST is defined in solr.in.sh; otherwise, defaults to "
-                    + ZK_HOST
-                    + '.')
-            .build();
+    .longOpt("zkHost")
+    .deprecated(
+        DeprecatedAttributes.builder()
+            .setForRemoval(true)
+            .setSince("9.6")
+            .setDescription("Use --zk-host instead")
+            .get())
+    .argName("HOST")
+    .hasArg()
+    .required(false)
+    .desc("Zookeeper connection string; unnecessary if ZK_HOST is defined in solr.in.sh; otherwise, defaults to "
+            + ZK_HOST
+            + '.').get();
     // @formatter:on
 
     public static final Option OPTION_ZKHOST =
     // @formatter:off
         Option.builder("z")
-            .longOpt("zk-host")
-            .argName("HOST")
-            .hasArg()
-            .required(false)
-            .desc("Zookeeper connection string; unnecessary if ZK_HOST is defined in solr.in.sh; otherwise, defaults to "
-                    + ZK_HOST
-                    + '.')
-            .build();
+    .longOpt("zk-host")
+    .argName("HOST")
+    .hasArg()
+    .required(false)
+    .desc("Zookeeper connection string; unnecessary if ZK_HOST is defined in solr.in.sh; otherwise, defaults to "
+            + ZK_HOST
+            + '.').get();
     // @formatter:on
 
     public static final Option OPTION_SOLRURL_DEPRECATED =
     // @formatter:off
         Option.builder("solrUrl")
-            .longOpt("solrUrl")
-            .deprecated(
-                DeprecatedAttributes.builder()
-                    .setForRemoval(true)
-                    .setSince("9.6")
-                    .setDescription("Use --solr-url instead")
-                    .get())
-            .argName("HOST")
-            .hasArg()
-            .required(false)
-            .desc("Base Solr URL, which can be used to determine the zk-host if that's not known; defaults to: "
-                    + getDefaultSolrUrl()
-                    + '.')
-            .build();
+    .longOpt("solrUrl")
+    .deprecated(
+        DeprecatedAttributes.builder()
+            .setForRemoval(true)
+            .setSince("9.6")
+            .setDescription("Use --solr-url instead")
+            .get())
+    .argName("HOST")
+    .hasArg()
+    .required(false)
+    .desc("Base Solr URL, which can be used to determine the zk-host if that's not known; defaults to: "
+            + getDefaultSolrUrl()
+            + '.').get();
     // @formatter:on
 
     public static final Option OPTION_SOLRURL =
     // @formatter:off
         Option.builder("url")
-            .longOpt("solr-url")
-            .argName("HOST")
-            .hasArg()
-            .required(false)
-            .desc("Base Solr URL, which can be used to determine the zk-host if that's not known; defaults to: "
-                    + getDefaultSolrUrl()
-                    + '.')
-            .build();
+    .longOpt("solr-url")
+    .argName("HOST")
+    .hasArg()
+    .required(false)
+    .desc("Base Solr URL, which can be used to determine the zk-host if that's not known; defaults to: "
+            + getDefaultSolrUrl()
+            + '.').get();
     // @formatter:on
 
     public static final Option OPTION_VERBOSE =
     // @formatter:off
         Option.builder("v")
-            .longOpt("verbose")
-            .argName("verbose")
-            .required(false)
-            .desc("Enable more verbose command output.")
-            .build();
+    .longOpt("verbose")
+    .argName("verbose")
+    .required(false)
+    .desc("Enable more verbose command output.").get();
     // @formatter:on
 
     public static final Option OPTION_HELP =
     // @formatter:off
         Option.builder("h")
-            .longOpt("help")
-            .required(false)
-            .desc("Print this message.")
-            .build();
+    .longOpt("help")
+    .required(false)
+    .desc("Print this message.").get();
     // @formatter:on
 
     public static final Option OPTION_RECURSE =
     // @formatter:off
         Option.builder("r")
-            .longOpt("recurse")
-            .argName("recurse")
-            .hasArg()
-            .required(false)
-            .desc("Recurse (true|false), default is false.")
-            .build();
+    .longOpt("recurse")
+    .argName("recurse")
+    .hasArg()
+    .required(false)
+    .desc("Recurse (true|false), default is false.").get();
     // @formatter:on
 
     public static final Option OPTION_CREDENTIALS =
     // @formatter:off
         Option.builder("u")
-            .longOpt("credentials")
-            .argName("credentials")
-            .hasArg()
-            .required(false)
-            .desc("Credentials in the format username:password. Example: --credentials solr:SolrRocks")
-            .build();
+    .longOpt("credentials")
+    .argName("credentials")
+    .hasArg()
+    .required(false)
+    .desc("Credentials in the format username:password. Example: --credentials solr:SolrRocks").get();
     // @formatter:on
 
     private static String getDefaultSolrUrl() {
         final String scheme = "http";
         final String host = "localhost";
         final String port = "8983";
-        return String.format(Locale.ROOT, "%s://%s:%s", scheme.toLowerCase(Locale.ROOT), host, port);
+        return String.format(Locale.ROOT, "%s://%s:%s", StringUtils.toRootLowerCase(scheme), host, port);
     }
 
     @Test
-    public void testOptions() {
+    void testOptions() {
         // sanity checks
         assertNotNull(DEFAULT_CONFIG_SET);
         assertNotNull(OPTION_CREDENTIALS);
