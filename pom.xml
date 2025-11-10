@@ -32,7 +32,6 @@
   </description>
   <url>https://commons.apache.org/proper/commons-cli/</url>
   <issueManagement>
-    <system>jira</system>
     <url>https://issues.apache.org/jira/browse/CLI</url>
   </issueManagement>
   <scm>
@@ -104,8 +103,6 @@
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-cli</commons.scmPubUrl>
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
     <commons.encoding>utf-8</commons.encoding>
-    <findbugs.skip>true</findbugs.skip>
-    <japicmp.skip>false</japicmp.skip>
     <!-- JaCoCo: Don't make code coverage worse than: -->
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
     <commons.jacoco.classRatio>1.00</commons.jacoco.classRatio>
@@ -119,17 +116,6 @@
     <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check pmd:check javadoc:javadoc</defaultGoal>
     <pluginManagement>
       <plugins>
-        <plugin>
-            <groupId>org.apache.rat</groupId>
-            <artifactId>apache-rat-plugin</artifactId>
-            <version>${commons.rat.version}</version>
-            <!-- Should agree with config in build section -->
-            <configuration>
-              <excludes>
-                <exclude>.asf.yaml</exclude>
-              </excludes>
-            </configuration>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
@@ -199,17 +185,6 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>${commons.rat.version}</version>
-        <!-- Should agree with config in build section -->
-        <configuration>
-          <excludes>
-            <exclude>.asf.yaml</exclude>
-          </excludes>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
