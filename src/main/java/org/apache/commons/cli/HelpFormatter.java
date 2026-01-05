@@ -44,9 +44,9 @@ import org.apache.commons.cli.help.OptionFormatter;
  * </p>
  * <pre>
  * Options options = new Options();
- * options.addOption(OptionBuilder.withLongOpt("file").withDescription("The file to be processed").hasArg().withArgName("FILE").isRequired().create('f'));
- * options.addOption(OptionBuilder.withLongOpt("version").withDescription("Print the version of the application").create('v'));
- * options.addOption(OptionBuilder.withLongOpt("help").create('h'));
+ * options.addOption(Option.builder("f").longOpt("file").desc("The file to be processed").hasArg().argName("FILE").required().get());
+ * options.addOption(Option.builder("v").longOpt("version").desc("Print the version of the application").get());
+ * options.addOption(Option.builder("h").longOpt("help").get());
  *
  * String header = "Do something useful with an input file\n\n";
  * String footer = "\nPlease report issues at https://example.com/issues";
@@ -67,6 +67,7 @@ import org.apache.commons.cli.help.OptionFormatter;
  *
  * Please report issues at https://example.com/issues
  * }</pre>
+ *
  * @deprecated Use {@link org.apache.commons.cli.help.HelpFormatter}.
  */
 @Deprecated
@@ -146,6 +147,7 @@ public class HelpFormatter {
 
         /**
          * Sets whether to show the date the option was first added.
+         *
          * @param showSince if @{code true} the date the options was first added will be shown.
          * @return this builder.
          * @since 1.9.0
@@ -232,6 +234,7 @@ public class HelpFormatter {
 
     /**
      * Gets the option description or an empty string if the description is {@code null}.
+     *
      * @param option The option to get the description from.
      * @return the option description or an empty string if the description is {@code null}.
      * @since 1.8.0
@@ -339,6 +342,7 @@ public class HelpFormatter {
 
     /**
      * Constructs a new instance.
+     *
      * @param printWriter TODO
      */
     private HelpFormatter(final Function<Option, String> deprecatedFormatFunction, final PrintWriter printWriter, final boolean showSince) {

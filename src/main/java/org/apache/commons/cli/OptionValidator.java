@@ -21,11 +21,14 @@ package org.apache.commons.cli;
  * Validates an Option string.
  */
 final class OptionValidator {
-    /* package private for testing access */
-    /** The array of additional characters allowed as the first character in the option but not in the rest of the option */
-    static final char[] ADDITIONAL_OPTION_CHARS = {'?', '@'};
-    /** The array of additional characters allowed in the rest of the option but not in the first position */
-    static final char[] ADDITIONAL_LONG_CHARS = {'-'};
+
+    /**
+     * The array of additional characters allowed as the first character in the option but not in the rest of the option. Package private for tests.
+     */
+    static final char[] ADDITIONAL_OPTION_CHARS = { '?', '@' };
+
+    /** The array of additional characters allowed in the rest of the option but not in the first position Package private for tests. */
+    static final char[] ADDITIONAL_LONG_CHARS = { '-' };
 
     /**
      * Returns whether the specified character is a valid character.
@@ -41,6 +44,7 @@ final class OptionValidator {
      * <li>isIdentifierIgnorable returns true for the character</li>
      * <li>it is a hyphen/dash ('-')</li>
      * </ul>
+     *
      * @param c the character to validate
      * @return true if {@code c} is a valid character letter.
      */
@@ -62,6 +66,7 @@ final class OptionValidator {
      * <li>isIdentifierIgnorable returns true for the character</li>
      * <li>it is a question mark or 'at' sign ('?' or '@')</li>
      * </ul>
+     *
      * @param c the option to validate
      * @return true if {@code c} is a letter, '?' or '@', otherwise false.
      */
@@ -71,6 +76,7 @@ final class OptionValidator {
 
     /**
      * Checks the char array for a matching char.
+     *
      * @param chars the char array to search
      * @param c the char to look for.
      * @return {@code true} if {@code c} was in {@code ary}, {@code false} otherwise.
